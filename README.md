@@ -17,7 +17,7 @@
 - First, secure that you have a python 3.x version installed in your machine;
 - Then, you have to download the folder;
 - When you have completed the download, you have to keep all the files together;
-- Open a terminal in the folder and execute python3 main.py (linux users) or python main.py (windows users).
+- Open a terminal in the folder and execute python3 main.py (linux users) or python main.py (windows users);
 - If you have two-factor autentication active, you have to create a password for use the script, otherwise it won't work.
 
 #### How you create a password
