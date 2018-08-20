@@ -26,7 +26,7 @@ class EmailNotify(object):
             mail = imaplib.IMAP4_SSL(self.__server, self.__port)
             mail.login(self.getLogin(), self.getSenha())
             return mail
-        except ConnectionError as err:
+        except (ConnectionError, OSError) as err:
             print(err)
 
     def notify(self):
