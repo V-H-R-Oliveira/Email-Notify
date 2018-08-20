@@ -4,18 +4,27 @@ from bs4 import BeautifulSoup
 
 class EmailNotify(object):
     def __init__(self, login, senha):
-        self.login = login
-        self.senha = senha
-        self.server = "imap.gmail.com"
-        self.port = 993
+        self.setLogin(login)
+        self.setSenha(senha)
+        self.__server = "imap.gmail.com"
+        self.__port = 993
 
-    def __repr__(self):
-        return "Login: {}\nSenha: {}".format(self.login, self.senha)
+    def setLogin(self, login):
+        self.__login = login
+
+    def getLogin(self):
+        return self.__login
+
+    def setSenha(self, senha):
+        self.__senha = senha
+
+    def getSenha(self):
+        return self.__senha
 
     def conectar(self):
         try:
-            mail = imaplib.IMAP4_SSL(self.server, self.port)
-            mail.login(self.login, self.senha)
+            mail = imaplib.IMAP4_SSL(self.__server, self.__port)
+            mail.login(self.getLogin(), self.getSenha())
             return mail
         except ConnectionError as err:
             print(err)
@@ -27,6 +36,7 @@ class EmailNotify(object):
 
         if resultado == 'OK':
             lista_inbox = dados[0].split()
+
             if len(lista_inbox) == 0:
                 print("Não existem novos emails")
                 return 0
@@ -40,6 +50,7 @@ class EmailNotify(object):
                 destinatario = email_message['To']
                 assunto = email_message['Subject']
                 c = 1
+
                 for part in email_message.walk():
                     if part.get_content_maintype() == 'multipart':
                         continue
@@ -49,14 +60,14 @@ class EmailNotify(object):
                         ext = 'html'
                         filename = 'msg-part-%08d%s' %(c, ext)
                     c += 1
+
                 print("Remetente:", remetente)
                 print("Destinatário:", destinatario)
                 print('Assunto:', assunto)
                 op = input('Deseja exibir o conteúdo da msg?:').lower()
                 if op == 's' or op == 'y':
                     html_ = part.get_payload()
-                    soup = BeautifulSoup(html_, "html.parser")
-                    body = soup.get_text()
-                    print('Corpo da mensagem:', body)
+                    soup = BeautifulSoup(html_, "lxml")
+                    print('Corpo da mensagem:', soup.get_text())
                 else:
                     pass
